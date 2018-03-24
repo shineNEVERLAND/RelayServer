@@ -1,0 +1,41 @@
+靠！
+终于改对了！
+单步调试调的都要吐了的时候！
+你妹啊。
+原因是在CBuffer ::
+
+
+list<dealPackage*>::iterator CBuffer :: pGetDealPkgFromSendList(){
+	
+	list<dealPackage*>::iterator itList = lSendList.begin();
+	*itList = lSendList.front();
+	// pDealPkgBuff = *itList;+++++++++++++++++++++++++++give me a reason!!!!!!作为成员变量的pDealPkgBuff不能随便改！
+	
+	return itList;
+}
+
+
+
+1.内存泄露问题解决了：
+^CnMallocPkg20012
+nFreePkg20012
+CBufferManager delete
+==4836== 
+==4836== HEAP SUMMARY:
+==4836==     in use at exit: 0 bytes in 0 blocks
+==4836==   total heap usage: 60,853 allocs, 60,853 frees, 2,030,529,824 bytes allocated
+==4836== 
+==4836== All heap blocks were freed -- no leaks are possible
+==4836== 
+==4836== For counts of detected and suppressed errors, rerun with: -v
+==4836== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+
+解决的问题：
+如果对方不在线，要将当前这个包给删掉
+【另外】：需要注意：
+析构了message task之后，要将在线状态修改为不在线状态
+
+2.要注意虽然修改了是否在线的状态，优化了之前对魔数的使用，但要记得，要在每个地方都修改一下子。
+被注释的那句话。这样造成了读写冲突。写操作不改变成员变量pDealPkgBuff的值。
+

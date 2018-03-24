@@ -1,0 +1,8 @@
+ECHO 处于打开状态。
+a.out
+client/client
+client/core
+client/tmp
+relayserver/*.o
+relayserver/pPkg
+relayserver/tmp

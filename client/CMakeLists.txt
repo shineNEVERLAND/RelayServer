@@ -1,0 +1,3 @@
+PROJECT(main)
+SET(CMAKE_BUILD_TYPE, "Debug")
+ADD_EXECUTABLE(main *.c)
